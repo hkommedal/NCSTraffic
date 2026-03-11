@@ -1,0 +1,2 @@
+// Zustand stores — create one file per store in this directory.
+// Example: export { useAppStore } from "./app-store";
