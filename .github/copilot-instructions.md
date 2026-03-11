@@ -112,16 +112,18 @@ Scoped instruction files in `.github/instructions/` provide detailed rules for s
 
 ## Application Goals
 The goal of the NCS Traffic app is to provide a map of the North Sea with the following content displayed:
-Petroleum field polygons and facilities from Sodir (Sokkeldirektoratet)
-Flights from Avinor or Flightradar, including helichopter traffic to installations on the Norwegian Continental Shelf
-All essel traffic from Barentswatch
-Weather data from Met API
+Johan Sverdrup petroleum field polygons and facilities from Sodir.no (Sokkeldirektoratet)
+Flights from Flightradar, including helichopter traffic to installations on the Norwegian Continental Shelf
+All vessel traffic from Barentswatch
 All data are to be visualized on a leaflet map. 
 For more accurate icons use Leaflet.IconMaterial
 
 ## Weather data
-Use the Met API to fetch current weather conditions and forecasts for locations in the North Sea. Display this information in a tooltip or sidebar when users click on a location on the map.
+Use the Met API to fetch current weather conditions for locations in the North Sea. Display this data as an overlay on the map, with icons representing different weather conditions (e.g. sunny, rainy, stormy) and tooltips showing temperature, wind speed, and other relevant information.
 
-## Petroleum field data
-For petroleum field data, use the Sodir.no API to fetch polygons and facility locations. Display these as layers on the map, with different colors or icons for fields vs facilities. Include tooltips with key information about each field/facility.
+## Johan Sverdrup Petroleum field data
+For Johan Sverdrup petroleum field data, use the Sodir.no to fetch polygons locations. Display  the geographically correct field polygons as layers on the map, with different colors or icons for fields vs facilities. Include tooltips with key information about each field/facility.
+
+
+
 
