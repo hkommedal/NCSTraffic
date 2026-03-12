@@ -8,7 +8,8 @@ import BrageLayer from "./layers/BrageLayer";
 import VesselsLayer from "./layers/VesselsLayer";
 import FlightsLayer from "./layers/FlightsLayer";
 import WeatherLayer from "./layers/WeatherLayer";
-import LayerControl from "./LayerControl";
+import WavesLayer from "./layers/WavesLayer";
+import AirportsLayer from "./layers/AirportsLayer";
 import { useLayerStore } from "@/lib/store/layers";
 
 import type { LatLngTuple } from "leaflet";
@@ -19,9 +20,12 @@ const DEFAULT_ZOOM = 8;
 export default function MapInner() {
   const johanSverdrup = useLayerStore((s) => s.johanSverdrup);
   const brage = useLayerStore((s) => s.brage);
+  const facilityTypes = useLayerStore((s) => s.facilityTypes);
   const vessels = useLayerStore((s) => s.vessels);
   const flights = useLayerStore((s) => s.flights);
+  const airports = useLayerStore((s) => s.airports);
   const weather = useLayerStore((s) => s.weather);
+  const waves = useLayerStore((s) => s.waves);
 
   return (
     <div className="relative h-full w-full">
@@ -29,20 +33,21 @@ export default function MapInner() {
         center={NORTH_SEA_CENTER}
         zoom={DEFAULT_ZOOM}
         className="h-full w-full"
-        zoomControl={true}
+        zoomControl={false}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <ScaleControl position="bottomleft" />
-        {johanSverdrup && <JohanSverdrupLayer />}
-        {brage && <BrageLayer />}
+        {johanSverdrup && <JohanSverdrupLayer facilityTypes={facilityTypes} />}
+        {brage && <BrageLayer facilityTypes={facilityTypes} />}
         {vessels && <VesselsLayer />}
         {flights && <FlightsLayer />}
+        {airports && <AirportsLayer />}
         {weather && <WeatherLayer />}
+        {waves && <WavesLayer />}
       </MapContainer>
-      <LayerControl />
     </div>
   );
 }

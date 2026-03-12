@@ -12,6 +12,8 @@ export const flightSchema = z.object({
   registration: z.string(),
   origin: z.string(),
   destination: z.string(),
+  originName: z.string(),
+  destinationName: z.string(),
   flightNumber: z.string(),
   callsign: z.string(),
   verticalSpeed: z.number(),
