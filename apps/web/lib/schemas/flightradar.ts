@@ -18,6 +18,7 @@ export const flightSchema = z.object({
   callsign: z.string(),
   verticalSpeed: z.number(),
   isHelicopter: z.boolean(),
+  trail: z.array(z.tuple([z.number(), z.number()])).optional(),
 });
 
 export type Flight = z.infer<typeof flightSchema>;

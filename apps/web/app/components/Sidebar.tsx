@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLayerStore, FACILITY_TYPES } from "@/lib/store/layers";
 import { useThemeStore } from "@/lib/store/theme";
+import Tutorial from "./Tutorial";
 
 type LayerRowProps = {
   label: string;
@@ -36,11 +37,17 @@ function FieldsSection() {
   const [open, setOpen] = useState(true);
   const johanSverdrup = useLayerStore((s) => s.johanSverdrup);
   const brage = useLayerStore((s) => s.brage);
+  const ekofisk = useLayerStore((s) => s.ekofisk);
+  const troll = useLayerStore((s) => s.troll);
+  const ormenLange = useLayerStore((s) => s.ormenLange);
   const toggle = useLayerStore((s) => s.toggle);
 
   const fields = [
     { key: "johanSverdrup" as const, label: "Johan Sverdrup", active: johanSverdrup, color: "#3b82f6" },
     { key: "brage" as const, label: "Brage", active: brage, color: "#fb923c" },
+    { key: "ekofisk" as const, label: "Ekofisk", active: ekofisk, color: "#ef4444" },
+    { key: "troll" as const, label: "Troll", active: troll, color: "#22c55e" },
+    { key: "ormenLange" as const, label: "Ormen Lange", active: ormenLange, color: "#a855f7" },
   ];
   const activeCount = fields.filter((f) => f.active).length;
   const anyActive = activeCount > 0;
@@ -291,6 +298,7 @@ export default function Sidebar() {
             <NavRow href="/datasources" label="Data Sources" />
             <div className="h-px bg-slate-200 dark:bg-white/8 my-1" />
             <ThemeToggleRow />
+            <Tutorial />
           </div>
         </>
       )}

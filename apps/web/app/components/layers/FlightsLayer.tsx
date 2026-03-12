@@ -9,7 +9,6 @@ import { faHelicopter } from "@fortawesome/free-solid-svg-icons";
 import type { Flight } from "@/lib/schemas/flightradar";
 import type { LatLngTuple } from "leaflet";
 import { useLayerStore } from "@/lib/store/layers";
-import { airportCoords, nearestAirport } from "@/lib/data/airports";
 
 library.add(faHelicopter);
 
@@ -65,25 +64,6 @@ function projectPoint(lat: number, lon: number, headingDeg: number, distKm: numb
   return [(φ2 * 180) / Math.PI, (λ2 * 180) / Math.PI];
 }
 
-/**
- * Build route segments for a helicopter:
- * - From known origin OR nearest heliport → current position (where it came from)
- * - From current position → known destination OR 30 km forward heading projection
- */
-function helicopterRouteSegments(
-  flight: Flight,
-): [LatLngTuple, LatLngTuple][] {
-  const pos: LatLngTuple = [flight.latitude, flight.longitude];
-  const origin: LatLngTuple = airportCoords(flight.origin) ?? nearestAirport(flight.latitude, flight.longitude);
-  const dest: LatLngTuple =
-    airportCoords(flight.destination) ??
-    projectPoint(flight.latitude, flight.longitude, flight.heading ?? 0, 30);
-  return [
-    [origin, pos],
-    [pos, dest],
-  ];
-}
-
 export default function FlightsLayer() {
   const helicopterRoutes = useLayerStore((s) => s.helicopterRoutes);
   const [flights, setFlights] = useState<Flight[]>([]);
@@ -107,24 +87,47 @@ export default function FlightsLayer() {
 
   return (
     <>
-      {/* Helicopter route lines: nearest heliport → current pos → forward heading */}
+      {/* Helicopter trajectory trails from accumulated server-side positions */}
+      {helicopterRoutes &&
+        flights
+          .filter((f) => f.isHelicopter && f.trail && f.trail.length >= 2)
+          .map((flight) => (
+            <Polyline
+              key={`${flight.id}-trail`}
+              positions={flight.trail!}
+              pathOptions={{
+                color: "#e65100",
+                weight: 2,
+                opacity: 0.7,
+              }}
+            />
+          ))}
+
+      {/* Projected heading line (dashed) from current position forward */}
       {helicopterRoutes &&
         flights
           .filter((f) => f.isHelicopter)
-          .flatMap((flight) =>
-            helicopterRouteSegments(flight).map((seg, i) => (
+          .map((flight) => {
+            const pos: LatLngTuple = [flight.latitude, flight.longitude];
+            const projected = projectPoint(
+              flight.latitude,
+              flight.longitude,
+              flight.heading ?? 0,
+              30,
+            );
+            return (
               <Polyline
-                key={`${flight.id}-seg-${i}`}
-                positions={seg}
+                key={`${flight.id}-proj`}
+                positions={[pos, projected]}
                 pathOptions={{
                   color: "#e65100",
-                  weight: i === 0 ? 2 : 1.5,
-                  opacity: i === 0 ? 0.7 : 0.4,
-                  dashArray: i === 0 ? undefined : "6 6",
+                  weight: 1.5,
+                  opacity: 0.4,
+                  dashArray: "6 6",
                 }}
               />
-            )),
-          )}
+            );
+          })}
 
       {flights.map((flight) => (
         <Marker

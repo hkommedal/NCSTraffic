@@ -40,6 +40,7 @@ const SUB_BOUNDS = [
   "59.25,56,3,8",
   "62.5,59.25,-2,3",
   "62.5,59.25,3,8",
+  "65,62.5,2,10", // Kristiansund / Florø / mid-Norway coast
 ];
 
 const HELICOPTER_TYPES = new Set([

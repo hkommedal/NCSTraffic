@@ -5,6 +5,9 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-iconmaterial/dist/leaflet.icon-material.css";
 import JohanSverdrupLayer from "./layers/JohanSverdrupLayer";
 import BrageLayer from "./layers/BrageLayer";
+import EkofiskLayer from "./layers/EkofiskLayer";
+import TrollLayer from "./layers/TrollLayer";
+import OrmenLangeLayer from "./layers/OrmenLangeLayer";
 import VesselsLayer from "./layers/VesselsLayer";
 import FlightsLayer from "./layers/FlightsLayer";
 import WeatherLayer from "./layers/WeatherLayer";
@@ -20,6 +23,9 @@ const DEFAULT_ZOOM = 8;
 export default function MapInner() {
   const johanSverdrup = useLayerStore((s) => s.johanSverdrup);
   const brage = useLayerStore((s) => s.brage);
+  const ekofisk = useLayerStore((s) => s.ekofisk);
+  const troll = useLayerStore((s) => s.troll);
+  const ormenLange = useLayerStore((s) => s.ormenLange);
   const facilityTypes = useLayerStore((s) => s.facilityTypes);
   const vessels = useLayerStore((s) => s.vessels);
   const flights = useLayerStore((s) => s.flights);
@@ -42,6 +48,9 @@ export default function MapInner() {
         <ScaleControl position="bottomleft" />
         {johanSverdrup && <JohanSverdrupLayer facilityTypes={facilityTypes} />}
         {brage && <BrageLayer facilityTypes={facilityTypes} />}
+        {ekofisk && <EkofiskLayer facilityTypes={facilityTypes} />}
+        {troll && <TrollLayer facilityTypes={facilityTypes} />}
+        {ormenLange && <OrmenLangeLayer facilityTypes={facilityTypes} />}
         {vessels && <VesselsLayer />}
         {flights && <FlightsLayer />}
         {airports && <AirportsLayer />}

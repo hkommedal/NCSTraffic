@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { fetchFlights, fetchFlightRoute } from "@/lib/services/flightradar";
+import { recordPosition, pruneStale } from "@/lib/services/flight-trails";
 import { recordFetch } from "@/lib/datasource-registry";
 
 export async function GET(request: NextRequest) {
@@ -23,8 +24,15 @@ export async function GET(request: NextRequest) {
       }),
     );
 
+    // Record positions and attach accumulated trails
+    const withTrails = enriched.map((flight) => ({
+      ...flight,
+      trail: recordPosition(flight.id, flight.latitude, flight.longitude),
+    }));
+
+    pruneStale();
     recordFetch("flights");
-    return NextResponse.json(enriched);
+    return NextResponse.json(withTrails);
   } catch (error) {
     const msg = error instanceof Error ? error.message : "Unknown error";
     recordFetch("flights", msg);

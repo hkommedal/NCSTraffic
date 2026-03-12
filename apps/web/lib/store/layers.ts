@@ -11,9 +11,25 @@ export const FACILITY_TYPES: { type: FacilityType; label: string; color: string 
   { type: "template", label: "Template", color: "#00695c" },
 ];
 
+type ToggleableLayer =
+  | "johanSverdrup"
+  | "brage"
+  | "ekofisk"
+  | "troll"
+  | "ormenLange"
+  | "vessels"
+  | "flights"
+  | "helicopterRoutes"
+  | "airports"
+  | "weather"
+  | "waves";
+
 type LayerStore = {
   johanSverdrup: boolean;
   brage: boolean;
+  ekofisk: boolean;
+  troll: boolean;
+  ormenLange: boolean;
   facilityTypes: Record<FacilityType, boolean>;
   vessels: boolean;
   flights: boolean;
@@ -21,7 +37,7 @@ type LayerStore = {
   airports: boolean;
   weather: boolean;
   waves: boolean;
-  toggle: (layer: "johanSverdrup" | "brage" | "vessels" | "flights" | "helicopterRoutes" | "airports" | "weather" | "waves") => void;
+  toggle: (layer: ToggleableLayer) => void;
   toggleFacilityType: (type: FacilityType) => void;
 };
 
@@ -32,6 +48,9 @@ const allTypesOn = Object.fromEntries(
 export const useLayerStore = create<LayerStore>()((set) => ({
   johanSverdrup: true,
   brage: true,
+  ekofisk: true,
+  troll: true,
+  ormenLange: true,
   facilityTypes: allTypesOn,
   vessels: true,
   flights: true,

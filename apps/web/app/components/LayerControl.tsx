@@ -6,21 +6,27 @@ import { useLayerStore } from "@/lib/store/layers";
 const LAYERS = [
   { key: "johanSverdrup", label: "Johan Sverdrup", dot: "#3b82f6" },
   { key: "brage", label: "Brage", dot: "#f97316" },
-  { key: "vessels", label: "Vessels", dot: "#22c55e" },
+  { key: "ekofisk", label: "Ekofisk", dot: "#ef4444" },
+  { key: "troll", label: "Troll", dot: "#22c55e" },
+  { key: "ormenLange", label: "Ormen Lange", dot: "#a855f7" },
+  { key: "vessels", label: "Vessels", dot: "#10b981" },
   { key: "flights", label: "Flights", dot: "#fb923c" },
-  { key: "weather", label: "Weather", dot: "#a855f7" },
+  { key: "weather", label: "Weather", dot: "#8b5cf6" },
 ] as const;
 
 export default function LayerControl() {
   const [open, setOpen] = useState(false);
   const johanSverdrup = useLayerStore((s) => s.johanSverdrup);
   const brage = useLayerStore((s) => s.brage);
+  const ekofisk = useLayerStore((s) => s.ekofisk);
+  const troll = useLayerStore((s) => s.troll);
+  const ormenLange = useLayerStore((s) => s.ormenLange);
   const vessels = useLayerStore((s) => s.vessels);
   const flights = useLayerStore((s) => s.flights);
   const weather = useLayerStore((s) => s.weather);
   const toggle = useLayerStore((s) => s.toggle);
 
-  const values = { johanSverdrup, brage, vessels, flights, weather };
+  const values = { johanSverdrup, brage, ekofisk, troll, ormenLange, vessels, flights, weather };
   const activeCount = Object.values(values).filter(Boolean).length;
 
   return (
