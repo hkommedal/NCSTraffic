@@ -3,19 +3,13 @@ import type { WeatherPoint } from "@/lib/schemas/met";
 const FORECAST_URL = "https://api.met.no/weatherapi/locationforecast/2.0/compact";
 const USER_AGENT = "NCSTraffic/1.0 github.com/NCSTraffic";
 
-// Grid of weather observation points across the North Sea
-const WEATHER_GRID = [
-  { lat: 57.0, lon: 2.0, label: "Southern North Sea" },
-  { lat: 58.0, lon: 0.0, label: "Central North Sea W" },
-  { lat: 58.0, lon: 3.0, label: "Central North Sea" },
-  { lat: 58.0, lon: 6.0, label: "Central North Sea E" },
-  { lat: 58.9, lon: 2.5, label: "Johan Sverdrup" },
-  { lat: 59.5, lon: 1.0, label: "Northern North Sea W" },
-  { lat: 59.5, lon: 4.5, label: "Northern North Sea" },
-  { lat: 60.5, lon: 2.0, label: "Norwegian Sea S" },
-  { lat: 60.5, lon: 5.0, label: "Bergen Sea" },
-  { lat: 61.5, lon: 3.0, label: "Norwegian Sea N" },
-] as const;
+// 5-latitude × 4-longitude grid covering the North Sea / NCS area
+const LATS = [57.0, 58.3, 59.6, 60.9, 62.2];
+const LONS = [0.5, 2.0, 3.5, 5.0];
+
+const WEATHER_GRID = LATS.flatMap((lat) =>
+  LONS.map((lon) => ({ lat, lon, label: `${lat}°N ${lon}°E` })),
+);
 
 async function fetchWeatherForPoint(
   lat: number,

@@ -1,6 +1,34 @@
 import type { Flight } from "@/lib/schemas/flightradar";
 
 const FEED_URL = "https://data-cloud.flightradar24.com/zones/fcgi/feed.js";
+const DETAIL_URL = "https://data-live.flightradar24.com/clickhandler/?version=1.5&flight=";
+
+/**
+ * Fetch origin/destination for a single flight from FR24's clickhandler API.
+ * Returns ICAO codes, or empty strings if unavailable.
+ */
+export async function fetchFlightRoute(
+  flightId: string,
+): Promise<{ origin: string; destination: string; originName: string; destinationName: string }> {
+  try {
+    const res = await fetch(`${DETAIL_URL}${flightId}`, { next: { revalidate: 120 } });
+    if (!res.ok) return { origin: "", destination: "", originName: "", destinationName: "" };
+    const data = (await res.json()) as Record<string, unknown>;
+    const airport = (data.airport ?? {}) as Record<string, unknown>;
+    const orig = (airport.origin ?? {}) as Record<string, unknown>;
+    const dest = (airport.destination ?? {}) as Record<string, unknown>;
+    const origCode = ((orig.code ?? {}) as Record<string, unknown>).icao as string | undefined;
+    const destCode = ((dest.code ?? {}) as Record<string, unknown>).icao as string | undefined;
+    return {
+      origin: origCode ?? "",
+      destination: destCode ?? "",
+      originName: (orig.name as string | undefined) ?? "",
+      destinationName: (dest.name as string | undefined) ?? "",
+    };
+  } catch {
+    return { origin: "", destination: "", originName: "", destinationName: "" };
+  }
+}
 
 /**
  * Split the North Sea into smaller sub-regions to avoid FR24's free-tier
@@ -18,6 +46,7 @@ const HELICOPTER_TYPES = new Set([
   "S92",
   "S76",
   "AS32",
+  "A169",
   "AS3B",
   "EC55",
   "EC35",
@@ -106,6 +135,8 @@ export async function fetchFlights(): Promise<Flight[]> {
         registration: String(value[9] ?? ""),
         origin: String(value[11] ?? ""),
         destination: String(value[12] ?? ""),
+        originName: "",
+        destinationName: "",
         flightNumber: String(value[13] ?? ""),
         callsign: String(value[16] ?? ""),
         verticalSpeed: Number(value[15] ?? 0),
