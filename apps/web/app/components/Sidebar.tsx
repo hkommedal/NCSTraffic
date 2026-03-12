@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLayerStore, FACILITY_TYPES } from "@/lib/store/layers";
 import { useThemeStore } from "@/lib/store/theme";
-import Tutorial from "./Tutorial";
+import { useTutorialStore } from "@/lib/store/tutorial";
 
 type LayerRowProps = {
   label: string;
@@ -221,6 +221,24 @@ function ThemeToggleRow() {
   );
 }
 
+function RestartGuideRow() {
+  const restart = useTutorialStore((s) => s.restart);
+
+  return (
+    <button
+      onClick={restart}
+      className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-semibold text-slate-500 hover:bg-slate-100 hover:text-slate-800 transition-all duration-150 cursor-pointer select-none dark:text-white/40 dark:hover:bg-white/5 dark:hover:text-white/70"
+    >
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="12" y1="16" x2="12" y2="12" />
+        <line x1="12" y1="8" x2="12.01" y2="8" />
+      </svg>
+      Restart Guide
+    </button>
+  );
+}
+
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const flights = useLayerStore((s) => s.flights);
@@ -294,11 +312,12 @@ export default function Sidebar() {
 
           {/* Footer */}
           <div className="px-3 py-3 shrink-0 flex flex-col gap-0.5">
-            <NavRow href="/" label="Map" />
+            <NavRow href="/map" label="Map" />
             <NavRow href="/datasources" label="Data Sources" />
+            <NavRow href="/" label="Home" />
             <div className="h-px bg-slate-200 dark:bg-white/8 my-1" />
             <ThemeToggleRow />
-            <Tutorial />
+            <RestartGuideRow />
           </div>
         </>
       )}
