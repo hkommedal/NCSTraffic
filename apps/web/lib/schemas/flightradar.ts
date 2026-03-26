@@ -12,10 +12,13 @@ export const flightSchema = z.object({
   registration: z.string(),
   origin: z.string(),
   destination: z.string(),
+  originName: z.string(),
+  destinationName: z.string(),
   flightNumber: z.string(),
   callsign: z.string(),
   verticalSpeed: z.number(),
   isHelicopter: z.boolean(),
+  trail: z.array(z.tuple([z.number(), z.number()])).optional(),
 });
 
 export type Flight = z.infer<typeof flightSchema>;
